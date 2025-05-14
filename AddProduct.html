@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add New Product</title>
+        <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Root Variables - Matching Dashboard */
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #f8f9fa;
+            --dark-color: #343a40;
+            --light-color: #ffffff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --bg-light: #f5f5f5;
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 10px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+        }
+
+        /* General Styles - Matching Dashboard */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            transition: all 0.3s;
+            line-height: 1.5;
+            color: var(--dark-color);
+            padding: 0;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: var(--light-color);
+        }
+
+        /* Container - Matching Dashboard Cards */
+        .container {
+            max-width: 800px;
+            margin: var(--spacing-lg) auto;
+            background: var(--light-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .container {
+            background-color: #2d2d2d;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Header - Matching Dashboard */
+        .dashboard-header {
+            background-color: var(--light-color);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-md) 0;
+        }
+
+        .lower-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body.dark-mode .dashboard-header {
+            background-color: #1e1e1e;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        h1, h2, h3 {
+            margin-bottom: var(--spacing-md);
+            font-weight: 500;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+        }
+
+        body.dark-mode h1 {
+            color: var(--light-color);
+        }
+
+        /* Form Elements - Matching Dashboard Style */
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        body.dark-mode label {
+            color: #e0e0e0;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="password"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-size: 1rem;
+        }
+
+        body.dark-mode input[type="text"],
+        body.dark-mode input[type="email"],
+        body.dark-mode input[type="tel"],
+        body.dark-mode input[type="number"],
+        body.dark-mode input[type="password"],
+        body.dark-mode input[type="url"],
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background-color: #3d3d3d;
+            color: var(--light-color);
+            border-color: #555;
+        }
+
+        /* Buttons - Matching Dashboard */
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: color 0.15s ease-in-out,
+                        background-color 0.15s ease-in-out,
+                        border-color 0.15s ease-in-out,
+                        box-shadow 0.15s ease-in-out;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #2070dc;
+            border-color: #2070dc;
+        }
+
+        .btn-secondary {
+            color: #fff;
+            background-color: var(--muted-color);
+            border-color: var(--muted-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: var(--spacing-sm);
+            font-size: 1rem;
+            margin-top: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Alerts - Matching Dashboard Colors */
+        .alert {
+            padding: var(--spacing-sm);
+            margin: var(--spacing-md) 0;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        body.dark-mode .alert-success {
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        body.dark-mode .alert-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .alert-warning {
+            background-color: rgba(255, 193, 7, 0.2);
+            border: 1px solid var(--warning-color);
+            color: #856404;
+            display: block;
+        }
+
+        body.dark-mode .alert-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #e0d3a3;
+        }
+
+        /* Image Preview */
+        .thumbnail-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: var(--spacing-sm);
+            border-radius: var(--border-radius);
+            display: none;
+            border: 1px solid var(--border-color);
+        }
+
+        body.dark-mode .thumbnail-preview {
+            border-color: #555;
+        }
+
+        /* Section Titles - Matching Dashboard Cards */
+        .section-title {
+            margin-top: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+            color: var(--dark-color);
+        }
+
+        body.dark-mode .section-title {
+            border-bottom-color: #555;
+            color: var(--light-color);
+        }
+
+        /* Required Field Indicator */
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        /* Dark Mode Toggle - Matching Dashboard */
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: inherit;
+        }
+
+        /* URL Preview Container */
+        .url-preview-container {
+            margin-top: var(--spacing-sm);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: var(--spacing-sm);
+                padding: var(--spacing-md);
+            }
+
+            .form-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dark-mode-toggle {
+                margin-top: var(--spacing-sm);
+            }
+        }
+    </style>
+    </head>
+    <body>
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="d-flex justify-content-between">
+                    <div class="lower-nav">
+                        <div class="d-flex align-items-center">
+                            <img src="logo.jpg" alt="logo"
+                                style="height: 50px; width: auto; border-radius: 5px; box-shadow: var(--shadow-sm);">
+                        </div>
+                        <div class="d-flex">
+                            <h1 class="text-primary">Add New Product</h1>
+                        </div>
+                        <div class="d-flex">
+                            <!-- <button class="dark-mode-toggle me-4" id="darkModeToggle">🌓</button> -->
+                            <button class="btn btn-secondary"
+                                onclick="window.location.href='/seller-dashboard.html'">Back
+                                to Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="alertSuccess" class="alert alert-success">
+                Product added successfully!
+            </div>
+
+            <div id="alertError" class="alert alert-danger">
+                Error adding product. Please try again.
+            </div>
+
+            <div id="loginPrompt" style="display: none;">
+                <div class="alert alert-warning">
+                    You need to be logged in to add products.
+                </div>
+                <div class="login-redirect">
+                    <button class="btn btn-primary"
+                        onclick="window.location.href='/login.html'">Sign In /
+                        Register</button>
+                </div>
+            </div>
+
+            <form id="productForm" style="display: none;">
+                <h3 class="section-title">Seller Information</h3>
+                <div class="form-group">
+                    <label for="sellerName" class="required">Name of
+                        Seller:</label>
+                    <input type="text" id="sellerName" name="sellerName"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile" class="required">Mobile Number:</label>
+                    <input type="tel" id="mobile" name="mobile" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="required">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <h3 class="section-title">Product Information</h3>
+                <div class="form-group">
+                    <label for="itemType" class="required">Type of Item:</label>
+                    <select id="itemType" name="itemType" required>
+                        <option value>Select item type</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="groceries">Groceries</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="itemName" class="required">Item Name:</label>
+                    <input type="text" id="itemName" name="itemName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price" class="required">Price (₹):</label>
+                    <input type="number" id="price" name="price" min="0"
+                        step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity" class="required">Number of
+                        Items:</label>
+                    <input type="number" id="quantity" name="quantity" min="1"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description"
+                        rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="itemImage" class="required">Item Image
+                        URL:</label>
+                    <input type="url" id="itemImage" name="itemImage"
+                        placeholder="https://example.com/image.jpg" required>
+                    <div class="url-preview-container">
+                        <button type="button" id="previewBtn"
+                            class="btn btn-secondary"
+                            style="width: 120px;">Preview Image</button>
+                        <img id="imagePreview" class="thumbnail-preview"
+                            alt="Image Preview">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary submit-btn"
+                        id="submitBtn">
+                        Submit Product
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            collection, 
+            getDoc,
+            updateDoc
+        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+        // Declare currentUser globally
+        let currentUser = null;
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBacyV04HeeJPRvUQOAOYqIEN7fAeUL5wk",
+            authDomain: "e-commerce-602fb.firebaseapp.com",
+            projectId: "e-commerce-602fb",
+            storageBucket: "e-commerce-602fb.appspot.com",
+            messagingSenderId: "565262782829",
+            appId: "1:565262782829:web:e7cc1178c4a6df6b6fca64",
+            measurementId: "G-ZC6N6K969D"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); // Firestore instance
+        const auth = getAuth(app);
+
+        // Check user authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (user.isAnonymous) {
+                    document.getElementById('loginPrompt').style.display = 'block';
+                    document.getElementById('productForm').style.display = 'none';
+                } else {
+                    currentUser = user;
+                    console.log("User ID:", user.uid);
+                    document.getElementById('productForm').style.display = 'block';
+                    document.getElementById('loginPrompt').style.display = 'none';
+                    getUserData(user.uid);
+                }
+            } else {
+                console.log("User is signed out");
+                document.getElementById('loginPrompt').style.display = 'block';
+                document.getElementById('productForm').style.display = 'none';
+            }
+        });
+
+        // Get user data to prefill form (using Firestore)
+        async function getUserData(userId) {
+            try {
+                const userRef = doc(db, "users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    if (userData.name) document.getElementById('sellerName').value = userData.name;
+                    if (userData.email) document.getElementById('email').value = userData.email;
+                    if (userData.mobile) document.getElementById('mobile').value = userData.mobile;
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        }
+
+        // Image preview functionality
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            const imageUrl = document.getElementById('itemImage').value;
+            const imagePreview = document.getElementById('imagePreview');
+
+            if (imageUrl) {
+                try {
+                    new URL(imageUrl);
+                    imagePreview.src = imageUrl;
+                    imagePreview.style.display = 'block';
+                } catch (e) {
+                    showAlert("alertError", "Please enter a valid URL (e.g., https://example.com/image.jpg)");
+                    imagePreview.style.display = 'none';
+                }
+            } else {
+                showAlert("alertError", "Please enter an image URL first");
+                imagePreview.style.display = 'none';
+            }
+        });
+
+        // Form submission
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!currentUser) {
+                showAlert("alertError", "You need to be logged in to add products.");
+                return;
+            }
+
+            if (currentUser.isAnonymous) {
+                showAlert("alertError", "Anonymous users cannot add products.");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting...";
+            loadingSpinner.style.display = 'inline-block';
+
+            // Get form values
+            const formData = {
+                sellerName: document.getElementById('sellerName').value.trim(),
+                mobile: document.getElementById('mobile').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                categories: document.getElementById('itemType').value,
+                itemName: document.getElementById('itemName').value.trim(),
+                price: parseFloat(document.getElementById('price').value),
+                quantity: parseInt(document.getElementById('quantity').value),
+                description: document.getElementById('description').value.trim(),
+                imageUrl: document.getElementById('itemImage').value.trim()
+            };
+
+            // Validate image URL
+            try {
+                new URL(formData.imageUrl);
+            } catch (e) {
+                showAlert("alertError", "Please enter a valid image URL");
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Submit Product";
+                loadingSpinner.style.display = 'none';
+                return;
+            }
+
+            try {
+                // Create product object
+                const productData = {
+                    ...formData,
+                    createdAt: new Date().toISOString(),
+                    sellerId: currentUser.uid,
+                    status: "active"
+                };
+
+                // Save product to Firestore
+                const productId = await saveProduct(productData);
+                console.log("Product saved with ID:", productId);
+
+                // Update stats and profile
+                await updateSellerStats(currentUser.uid);
+                await updateUserProfile(currentUser.uid, formData.sellerName, formData.email, formData.mobile);
+
+                showAlert("alertSuccess", "Product added successfully!");
+                this.reset();
+                document.getElementById('imagePreview').style.display = 'none';
+
+            } catch (error) {
+                console.error("Error adding product:", error);
+                showAlert("alertError", "Error adding product: " + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Submit Product";
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        // Update user profile information (using Firestore)
+        async function updateUserProfile(userId, name, email, mobile) {
+            try {
+                const userRef = doc(db, "users", userId);
+                await setDoc(userRef, {
+                    name: name,
+                    email: email,
+                    mobile: mobile
+                }, { merge: true }); // Merge with existing data
+                console.log("User profile updated");
+            } catch (error) {
+                console.error("Error updating user profile:", error);
+            }
+        }
+
+        // Save product to Firestore
+        async function saveProduct(productData) {
+            try {
+                const currentUser = auth.currentUser;
+                if (!currentUser) {
+                    throw new Error("No authenticated user found");
+                }
+
+                // Create a new product document with auto-generated ID
+                const productsRef = collection(db, "products");
+                const newProductRef = doc(productsRef);
+                
+                // Save to main products collection
+                await setDoc(newProductRef, productData);
+                console.log("Product saved to main collection with ID:", newProductRef.id);
+
+                // Also save to user's products subcollection
+                const userProductRef = doc(db, "users", currentUser.uid, "products", newProductRef.id);
+                await setDoc(userProductRef, productData);
+                console.log("Product saved to user's collection with ID:", newProductRef.id);
+
+                return newProductRef.id;
+            } catch (error) {
+                console.error("Error saving product:", error);
+                throw error;
+            }
+        }
+
+        // Update seller's stats (using Firestore)
+        async function updateSellerStats(userId) {
+            try {
+                const userRef = doc(db, "users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                let stats = {
+                    totalOrders: 0,
+                    totalSell: 0,
+                    totalProducts: 0,
+                    ordersComparison: "0% vs last month",
+                    sellComparison: "0% vs last month",
+                    productsComparison: "+0 vs last month"
+                };
+
+                if (userSnap.exists() && userSnap.data().stats) {
+                    stats = userSnap.data().stats;
+                }
+
+                // Increment products count
+                stats.totalProducts = (stats.totalProducts || 0) + 1;
+                stats.productsComparison = "+1 vs last month";
+
+                await setDoc(userRef, { stats }, { merge: true });
+                console.log("Seller stats updated");
+            } catch (error) {
+                console.error("Error updating stats:", error);
+                throw error;
+            }
+        }
+
+        // Show alert message
+        function showAlert(alertId, message) {
+            const alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Dark mode toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
+            }
+            
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+            });
+        });
+    </script>
+    </body>
+</html>
